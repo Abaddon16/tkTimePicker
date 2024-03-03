@@ -137,7 +137,7 @@ class SpinLabel(HoverClickLabel):
             self.updateLabel()
 
     def updateLabel(self):
-        self["text"] = f"{self.current_val}"
+        self["text"] = f"{self.current_val:02d}"
         self.event_generate("<<valueChanged>>")
 
     def value(self) -> str:
