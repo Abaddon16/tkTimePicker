@@ -257,27 +257,36 @@ class SpinTimePickerOld(basetimepicker.SpinBaseClass):
 
 class SpinTimePickerModern(basetimepicker.SpinBaseClass):
 
-    def __init__(self, parent, orient=constants.HORIZONTAL, per_orient=constants.VERTICAL, period=constants.AM):
+    def __init__(self, parent, orient=constants.HORIZONTAL, per_orient=constants.VERTICAL, period=constants.AM, hr_interval=1, min_interval=1):
         super(SpinTimePickerModern, self).__init__(parent)
 
         self.hour_type = constants.HOURS12
         self.orient = "top" if orient == constants.VERTICAL else "left"
 
-        self._12HrsTime = SpinLabel(master=self, min=1, max=12)
+        self._12HrsTime = SpinLabel(master=self, number_lst=list(range(1, 12, hr_interval)))
         self._12HrsTime.bind("<<valueChanged>>", lambda a: self._12HrsTime.event_generate("<<Changed12Hrs>>"))
         self._12HrsTime.bind("<Button-1>", lambda a: self.event_generate("<<Hrs12Clicked>>"))
 
-        self._24HrsTime = SpinLabel(master=self, min=0, max=23)
+        self._24HrsTime = SpinLabel(master=self, number_lst=list(range(0, 23, hr_interval)))
         self._24HrsTime.bind("<<valueChanged>>", lambda a: self._12HrsTime.event_generate("<<Changed24Hrs>>"))
         self._24HrsTime.bind("<Button-1>", lambda a: self.event_generate("<<Hrs24Clicked>>"))
 
-        self._minutes = SpinLabel(master=self, min=0, max=59)
+        self._minutes = SpinLabel(master=self, number_lst=list(range(0, 59, min_interval)))
         self._minutes.bind("<<valueChanged>>", lambda a: self._minutes.event_generate("<<ChangedMins>>"))
         self._minutes.bind("<Button-1>", lambda a: self.event_generate("<<MinClicked>>"))
 
         self._period = PeriodLabel(self, period, per_orient)
 
         self.spinlblGroup = LabelGroup()
+
+    def update_hours_interval(self, hrs_interval):
+        if hrs_interval is not None and hrs_interval>0:
+            self._12HrsTime.set_number_lst(list(range(1, 12, hrs_interval)))
+            self._24HrsTime.set_number_lst(list(range(0, 23, hrs_interval)))
+
+    def update_minutes_interval(self, minutes_interval):
+        if minutes_interval is not None and minutes_interval>0:
+            self._minutes.set_number_lst(list(range(0, 59, minutes_interval)))
 
     def addHours12(self):
         self._12HrsTime.pack(expand=True, fill="both", side=self.orient)

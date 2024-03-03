@@ -129,6 +129,9 @@ class SpinLabel(HoverClickLabel):
         self.bind("<MouseWheel>", self.wheelEvent)
         self.bind("<KeyRelease>", self.keyPress)
 
+    def set_number_lst(self, number_lst: list):
+        self.number_lst = number_lst
+
     def setValue(self, val):
         val = int(val)
         if val in self.number_lst:
